@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data files (can be large)
+data/*.tsv
+data/*.json
+data/*.pkl
+data/models/
+# ir_datasets cache (large datasets)
+data/.ir_datasets/
+data/*/
+!data/.gitkeep
+!data/README.md
+
+# Results
+results/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test results and outputs
+large_test_results.txt
+report_output.txt
+
+# Paper PDFs (copyright)
+Doc/
+
+# Keep requirements.txt (don't ignore it)
+!requirements.txt
