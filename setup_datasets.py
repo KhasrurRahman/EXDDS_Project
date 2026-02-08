@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from tqdm import tqdm
 
 def set_data_directory(data_dir: str = "data"):
     data_path = Path(data_dir).resolve()
@@ -13,7 +14,6 @@ import ir_datasets
 
 
 def setup_datasets():
-    data_dir = Path("data")
     data_path = set_data_directory("data")
     
     datasets = [
@@ -22,31 +22,46 @@ def setup_datasets():
     ]
     
     print("Setting up datasets...")
-    print("=" * 80)
-    print(f"Datasets will be downloaded to: {data_path}")
-    print("This is a one-time download. Subsequent runs will use cached data.")
+    print(f"Download location: {data_path}")
     print("=" * 80)
     
     for dataset_name in datasets:
         print(f"\n[{dataset_name}]")
-        print("Loading dataset (this will download if not already cached)...")
         try:
             dataset = ir_datasets.load(dataset_name)
-            print(f"  Dataset loaded successfully!")
-            print(f"  Documents: {dataset.docs_count():,}" if hasattr(dataset, 'docs_count') else "  Documents: Available")
-            print(f"  Queries: {dataset.queries_count():,}" if hasattr(dataset, 'queries_count') else "  Queries: Available")
+            
+            # Need to iterate to trigger download (lazy loading)
+            print("Downloading documents...")
+            doc_count = 0
+            for doc in tqdm(dataset.docs_iter(), desc="  Docs", total=100):
+                doc_count += 1
+                if doc_count >= 100:
+                    break
+            
+            print("Downloading queries...")
+            query_count = 0
+            for query in tqdm(dataset.queries_iter(), desc="  Queries"):
+                query_count += 1
+            
+            print("Downloading qrels...")
+            qrel_count = 0
+            for qrel in tqdm(dataset.qrels_iter(), desc="  Qrels"):
+                qrel_count += 1
+            
+            print(f"✓ Ready: {query_count} queries, {qrel_count} judgments")
+            
+            # Check if collection file exists
+            collection_path = data_path / ".ir_datasets" / "msmarco-passage" / "collection.tsv"
+            if collection_path.exists():
+                size_gb = collection_path.stat().st_size / (1024**3)
+                print(f"Collection size: {size_gb:.2f} GB")
+                
         except Exception as e:
-            print(f"  Error loading dataset: {e}")
-            print(f"  You may need to accept the data usage agreement.")
-            print(f"  Run the experiment script and follow the prompts.")
+            print(f"Error: {e}")
+            print("You may need to accept the data usage agreement.")
     
-    print("\n" + "=" * 80)
-    print("Setup complete!")
-    print("=" * 80)
-    print("\nYou can now run experiments with:")
-    print("  python experiment.py --num-queries 10 --num-docs 1000")
+    print("\nSetup complete!")
 
 
 if __name__ == "__main__":
     setup_datasets()
-

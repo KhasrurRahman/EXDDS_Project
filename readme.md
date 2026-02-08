@@ -113,3 +113,13 @@ For first-time setup:
 ```bash
 python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && python setup_datasets.py && python experiment.py --num-queries 5 --num-docs 500
 ```
+
+
+
+Task	Priority
+1. Paper Analysis Report (Doc/paper_analysis.md)	🔴 HIGH
+2. Results Documentation (Doc/results.md)	🔴 HIGH
+3. Statistical Significance Tests	🟡 MEDIUM
+4. Presentation Slides	🟡 MEDIUM
+5. Comprehensive Tests	🟡 MEDIUM
+6. Code Documentation
